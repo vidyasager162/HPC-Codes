@@ -1,0 +1,199 @@
+Capabilities of Debugger Software Overview
+1. Introduction
+
+The traditional method for finding bugs in code is to place several write statements throughout the code and rerun it to see what values the variables have at those locations. However, there is a much better way to debug code -- use debugging software. Debugging software makes it easier and faster to find problems in your code. You can even "look" inside your code while it is executing. For example, with three simple debugging commands, you can have your program run to a certain line and then pause. You can then see what value any variable has at that point in the code. Once you are running your code line-by-line within debugging software, you can find much more information about your code's execution than you could ever get through the placement of write statements.
+
+In the following sections of this lesson, we discuss many of the typical debugger software capabilities. Since it is not really possible, we do not cover all the capabilities found in every single debugger. Instead, we discuss some important ones and leave it up to you to explore the others on your own.
+Objectives
+
+In this lesson, you will learn the basic capabilities of debugger software and how to use them to find bugs in your programs. Specifically, you will learn how to execute code, analyze code, alter code execution, and retrieve available code information from within debugger software.
+
+2. Basic Debugger Overview
+
+Debugging software is ubiquitous, and you can find a debugger for almost any language, compiler, and/or software package you use. Debuggers not only exist for all the major and minor programming languages (Fortran 77/90, C, C++, Java, Perl, Matlab®, Octave, Portland Group Compilers, KAI compilers, etc.) but are often built into the software.
+
+Debugger interfaces come in two varieties: command-line and graphical user interface (GUI). You can choose what interface you want to use. You get all the capabilities of the debugging software regardless of how you choose to interact with it. However, GUI debuggers make debugging easier since you only have to click on buttons and icons to activate the debugging commands rather than remember specific commands.
+
+Debuggers also work with parallel code. With them, you can do the same kinds of analyses (while your program is running) as you can do with serial code. Except with parallel debuggers, you can control the execution of the code on each processor. You can even perform different investigations on different processors. For example, Totalview® is a sophisticated parallel debugger with code analysis windows that can be switched from one processor to another. Also, many popular serial debuggers have included commands to enable the analysis of parallel programs.
+
+To run your code in a debugger, you need to compile your program in a certain way. However, it is straightforward to do. Typically, you only need to use one compiler option to make your code "debuggable." And for almost all compilers, this option is '-g,' which is somewhat of a de facto standard.
+
+It is also easy to use a debugger with your executable code. Typically, all you need to do is type the debugger's name, followed by your executable name. Upon doing this, you enter the debugging software with your program sitting at the beginning waiting to be run, paused, and analyzed.
+
+3. Executing Code within Debugger Software
+
+There are a few basic commands for executing code within debugger software. With these commands, you can:
+
+    list your source code with the lines numbered
+    stop the program at a certain point
+    execute the code line-by-line
+    stop the program when the value of an expression changes
+    jump to a certain line of code and start executing
+
+The following sections describe the capabilities of each of these commands.
+3.1. Listing source code
+
+The first step you want to take when debugging your code is to generate a line-numbered listing of your source code. By looking at your program statements, you can decide how you wish to execute them. If the debugger has a GUI interface, your source code is displayed in a window with each line numbered. For a command-line debugger, there is a list command that displays the first part of your program. At any time during your debugging session, you can run the list command and see which line you are on and a certain number of lines surrounding it (a typical number is 10). Rerunning it will display more of your code.
+
+3.2. Stopping a program at a certain point
+
+Typically, you have some idea where a bug might be in your program. This could come from a run-time error message, strange-looking output, or even a gut feeling. Therefore, the quickest way to locate it is to tell the debugger to run your program up to a certain line and then stop. To do this, you specify a breakpoint at the suspect line in your code. This is done with a debugger command typically called break. Think of a breakpoint as a stop sign. When your executing program hits a breakpoint, the execution stops. After you have set the breakpoint, you can begin executing your code (from line 1) with the run command. All of the lines preceding the breakpoint are executed inside the debugger just as if they had been executed normally. You can set as many breakpoints as you like anytime within the debugging session. Use the debugger continue command when you are done analyzing your code at one breakpoint and want to move to the next.
+
+3.3. Executing the program line-by-line
+
+When you want to study your code's execution carefully, it helps to run it line-by-line. You can do this using the debugger next command. When using the next command, the current program line is executed, and the debugger moves onto the next line and waits. By repeating the next command, you execute your program line-by-line to see what is happening in it.
+
+A command that is very similar to next is the step command. This command enables you to analyze the subprograms (functions or subroutines) within your code. Say that while you are executing your code line-by-line using next, you notice that the line you are about to execute will transfer code execution into a subprogram. If you want to analyze the subprogram code, use the step command. Repeated use of step will execute the subprogram line-by-line and then return to the calling program when finished.
+
+If you do not want to analyze a subprogram within your code, you can use the next command to move on to the next line in the main program. This is useful when you might have used a subprogram numerous times in several codes, and you know the bug is not there. In a sense, you skip over the subprogram call. However, the subprogram is still executed. You are just not analyzing it within the debugger software.
+
+3.4. Stopping when an Expression Value Changes
+
+In addition to stopping your code at a specified line as is done with the break command, you may also want to stop your code when an expression value changes. You do this by using the watch command. The watch command takes an argument, which is an expression, and stops the program when the expression value changes. This procedure is called setting a watchpoint. Notice that when using watch, you are not telling the debugger where to stop program execution (as with break), but rather the debugger tells you where the expression changed value in the program. In effect, the debugger runs your code line-by-line watching for the expression to change.
+
+An example of when you would want to use the watch command would be if you notice that somewhere in your code a variable x got the value 7 when you know that it should always be 6 or less if it is working correctly. To find where this is happening, you could set a watchpoint using the command:
+
+watch x=7
+
+3.5. Jumping to a specific line of code
+
+Sometimes you may not want to continue your code's execution at a place other than where it stopped. Debuggers allow you to specify an address to restart program execution. For example, the gdb debugger provides the jump command to indicate either a line number or address space to continue execution.
+
+4. Analyzing Code within Debugger Software
+
+Once you have run your code within a debugger and found your bug location, debugger tools can help you analyze it further. There are several analysis techniques supported by debuggers. For example:
+
+    printing the value of specified variables
+    formatting print output
+    printing expression values
+    analyzing program memory
+
+You will learn more about each of these analysis techniques in the following sections.
+
+4.1. Print the Value of Specified Variables
+
+Probably the most used and most powerful debugger command for analyzing code is the print command. Using the print command, you can see a specific variable's value after your program has been partially executed. You can then compare the actual value with the expected value. Of course, if they are different, then you have found your bug. As you would suspect, print expects a variable name as its argument. For example, if you want to know the value of the integer variable count, the print command would be:
+
+print count
+
+An extremely powerful feature of the print debugging command is that it shows you the value of any variable or piece of data connected with the program. If a program identifier can hold a value, the value can be seen by using print. A partial list of the variable types print can show are:
+
+    basic variables - real, integer, character, complex, logical
+    array variables - entire array or subsections, multi-dimensional
+    structure variables - containing members that are a mixture of types, Fortran 90 and C/C++
+    pointer variables - actual memory address stored in the pointer is displayed
+    objects - data members of an object-oriented instantiation of a class
+
+4.2. Formatting Print Output
+
+For every value obtained by the print command, there is a default format based on the type of the variable. For example, it is common practice to show an integer variable's contents as a decimal value. Every debugger allows you to change from the default format to see the variable's value in any format you want. To specify a certain format, you must give an argument to the print command. The format symbol is often just a single character. How extensive the formatting can be varies depending on the debugger software. The table below shows some formats that are common between debuggers:
+Integer Formats 	Hexadecimal, Decimal, Octal, or Binary bases
+The character with the matching ASCII value
+Real Formats 	Fixed point Exponential (Scientific Notation) 
+Number of decimal places can be specified
+Character Formats       	The character itself or The ASCII code for the character
+Logical Formats 	true, false 1,0
+Address Formats 	Absolute Memory Address (Hexadecimal) 
+Relative Memory Address: offset from nearest preceding variable
+Array Formats 	As stored in memory As pictured by the programmer (if different)
+Complex Format 	(real part, imaginary part)
+
+4.3. Printing the Values of Expressions
+
+The print command argument can be an expression that uses the operators of the language in which the program is written. First, the expression is evaluated, and then its resulting value is displayed by print. For example, in your program, you are looking at different points on an ellipse where the values of two variables - peri_dist and apo_dist - continuously change, but their sum is always equal to the same constant value. In this case, it could be useful to have the debugger execute the command:
+
+print peri_dist + apo_dist
+
+at several places in the code to see if the distances are being calculated correctly or not.
+
+The expression given to print does not have to involve a numerical calculation as shown above; it can also be a relational or conditional expression. For instance, if your code contained the following while loop and you are not sure that your program executes it. 
+
+do while ( iter <= 150 .and. done==.false.)
+
+     ...
+
+end do
+
+The output from the following debugging command will tell you if it is or not.
+
+print iter <= 150 .and. done==.false. 
+
+4.4. Analyzing Program Memory
+
+Sometimes it is necessary to see what value is stored in a specific memory address. The debugging command for this is usually called examine, which takes a specific memory address as its argument. One area where examine is handy is in looking at values of pointer variables. Say your program has a real variable called speed that is initialized to 55.0. Also, your program has a (pointer to a real) variable called rp that is given the address of speed. The same memory location should now be accessible (and changeable) by either the variable speed or indirectly by the pointer rp. If you suspect that a pointer and its target variable are not connected in this way, you can directly look at the memory address to confirm whether the value is correct or not.
+
+The data used in a program can be found in several areas:
+
+    Permanent Memory
+    The Stack
+    The Heap
+    Microprocessor Chip Data Caches
+    Microprocessor Chip Registers
+
+Debugging software enables you to see what values are stored in any of these areas. For some data areas, examine is used, and print is used for others. Also, there are other commands that we have not discussed.
+
+More important than the specific commands used are why you might want to examine these different data areas. Here is just a partial list of reasons to examine some of the data areas:
+
+    Stack: The stack is a part of memory that comes into play when a subprogram is called. By seeing the stack contents, you can check the connection between actual and dummy arguments, local variable values, values returned, as well as parameters of the stack itself (size, memory location, etc.)
+    Heap: The heap is a part of the stack used when memory is dynamically allocated for arrays. You analyze it if you think something is wrong when you bring an array into existence (or close it) during the course of your program.
+    Data Caches: One reason to study data caches is to learn their properties (size, line length) and how they are filled with data. A more important reason rarely has to do with debugging but with code performance. For a microprocessor-based machine, it is essential that cache data is being used correctly. Ideally, all data critical to primary calculations should be in the cache and be used and reused to ensure that your program runs quickly.
+    Registers: In several programming languages (C/C++), you can "ask" your program to store a variable in a register and not in permanent memory. A common variable designed for register storage is the iteration variable used in an unconditional loop (i.e., i,j,k). Iteration variables are, in general, not of interest except when the loop is being run, so you do not really want to waste precious permanent memory storage on them. By using a debugger, you can check to see if the compiler actually put them in register storage as you asked.
+
+
+5. Altering Code Execution within Debugger Software
+The ability to alter code execution is a very powerful feature of debugger software. Using this feature, you can step through and analyze your program to find your bug. Then you can alter your code to correct the bug and execute the rest of it to see if there are any more bugs. Typically, the set command is used to alter code in this way.
+Changing a Variable Value
+
+Using the set command, you can change the value of a variable. For example, if in your code you find that the real variable grav has a value of 9.8 but should equal 1.63, you can use the set command to give it the new (correct) value.
+
+set grav=1.63
+
+If you have not set any stopping points beyond this point in the code, you can execute the rest of your code by entering the continue command. Hopefully, your program will work correctly after this fix. However, do not forget that you still need to find out how grav got the wrong value to begin with.
+Variations of the Set Command
+
+The set command can do more than change the value of variables during program execution. Another use is to specify a memory address to alter the contents of that address directly. Or, you can use it to leave a subprogram prematurely and specify a new return value. This is helpful when you suspect that your error is within the subprogram and you want to alter what it calculates. To do this, you enter the command:
+
+return value
+
+This causes the subprogram to immediately return to the next line of the main code, stop execution at that point, and pass back the return value to the main program.
+
+A variant of set that should be used with extreme caution, and only if you know the assembly language of the machine your code is running on, is often called set write. This command allows you to use the debugger to actually modify the machine code within the executable file itself! As a rule, all debuggers open the executable in read-only mode, but set write can override this. Often leading to serious problems when misused.
+
+6. Information Retrieval Commands
+There is considerably more information you can get from debugging software than what we have already discussed.  To finish this lesson, we describe two useful commands for finding more about your debugger - info and help.
+The info Debugger Command
+
+You can get a wide variety of information using the info command. A sample of the types of available information is given below:
+
+    information on the user's debugging session
+    how the debugger has been customized
+    the nature, content, and extension of files being used by the debugger
+    the source language being used
+    the debugger environment
+    the contents of the symbol table
+    a history of all print values displayed
+    the UNIX environment of the shell the debugger is running in
+    the history of the UNIX commands typed
+    the characteristics of the hardware the debugger is running on
+
+To use info, give it a keyword argument. For example, the following debugging command:
+
+info breakpoint
+
+list all the breakpoints you have set in your code and their locations. While the command:
+
+info float
+
+lists the contents and layout of the floating-point functional unit in the microprocessor chip being used.
+The help Debugger Command
+
+The help command provides descriptions of all of the commands available in the debugging software. Enter the command help to find out what they are and how to use them. Typically, the first help screen shows a list of broad topics. You can then use the command help topic_name to get a screen of subtopics related to the topic you want to know more about. To get to the lowest level of detail, type help subtopic_name. Finally, you should get a complete description of the function and syntax of a specific debugging command.
+
+
+1. Checking Variable Values
+When you have an error in your code, examining variable values as your code executes is most likely the first step you take to find the problem. Using debugging software enables you to examine variable values while executing your code. This is a much more efficient and less error-prone method of debugging a program than the traditional method of inserting print statements throughout your code.
+In this lesson, you will learn how to debug a C program using The GNU Project Debugger (GDB) to examine variable values. A sample code is provided that you can download and debug as you follow the lesson.
+
+
+1. first.c - basic program to check gcc -g, break, next, step, jump, clear, run, quit, continue
+2. second.c - for printing variables
